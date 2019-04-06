@@ -213,5 +213,98 @@ namespace name_array{
         }
         return (max(L1,L2)+ min(R1,R2))/2.0;
     }
+///5.给定 n 个非负整数 a1，a2，...，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。
+/// 找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
+///转换思路：其实就是求idx1和idx2，使得(idx2-idx1)*min(num[idx1],num[idx1])最大
+    //方法1：暴力法--两个循环遍历即可
+    int maxArea(vector<int>& height) {
+        if(height.size()<=1)
+            return 0;
+        int max_Area=0;
+        for (int i = 0; i < height.size(); ++i) {
+            for (int j = i+1; j < height.size(); ++j) {
+                if(max_Area < (j-i)*min(height[i],height[j]))
+                {
+                    max_Area = (j-i)*min(height[i],height[j]);
+                }
+            }
+        }
+        return max_Area;
+    }
+    //方法2：这里用到了动态规划，基本的表达式: area = min(height[i], height[j]) * (j - i) 使用两个指针，值小的指针向内移动，
+    // 这样就减小了搜索空间 因为面积取决于指针的距离与值小的值乘积，如果值大的值向内移动，距离一定减小，而求面积的另外一个乘数一定小于等于值小的值，因此面积一定减小，
+    // 而我们要求最大的面积，因此值大的指针不动，而值小的指针向内移动遍历
+    int maxArea1(vector<int>&height){
+        if(height.size()<=1)
+            return 0;
+        int max_Area = 0;
+        int pre=0,last=height.size()-1;
+        while (pre!=last)
+        {
+            int h = min(height[last],height[pre]);//最小高度
+            max_Area = max(max_Area,(last-pre)*h);
+            if(height[pre] < height[last])
+                pre++;
+            else
+                last--;
 
+        }
+        return max_Area;
+
+    }
+
+///6.给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
+///注意：答案中不可以包含重复的三元组。
+    //方法1：暴力---三个循环
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> res;
+        if(nums.size()<3)
+            return res;
+        std::sort(nums.begin(),nums.end());//对元素排序
+        for (int i = 0; i < nums.size(); ++i) {
+            for (int j = i+1; j < nums.size(); ++j) {
+                for (int k = j+1; k < nums.size(); ++k) {
+                    if (0==nums[i]+nums[j]+nums[k])
+                    {
+                        vector<int>key{nums[i],nums[j],nums[k]};
+                        if(res.end()==std::find(res.begin(),res.end(),key))//新的对不存在
+                            res.push_back({nums[i],nums[j],nums[k]});
+                        key.clear();
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    //方法2：
+    //我们对原数组进行排序，然后开始遍历排序后的数组，这里注意不是遍历到最后一个停止，而是到倒数第三个就可以了。这里我们可以先做个剪枝优化，
+    // 就是当遍历到正数的时候就break，为啥呢，因为我们的数组现在是有序的了，如果第一个要fix的数就是正数了，那么后面的数字就都是正数，就永远不会出现和为0的情况了。
+    // 然后我们还要加上重复就跳过的处理，处理方法是从第二个数开始，如果和前面的数字相等，就跳过，因为我们不想把相同的数字fix两次。对于遍历到的数，用0减去这个fix的数得到一个target，
+    // 然后只需要再之后找到两个数之和等于target即可。我们用两个指针分别指向fix数字之后开始的数组首尾两个数，如果两个数和正好为target，则将这两个数和fix的数一起存入结果中。
+    // 然后就是跳过重复数字的步骤了，两个指针都需要检测重复数字。如果两数之和小于target，则我们将左边那个指针i右移一位，使得指向的数字增大一些。同理，如果两数之和大于target，
+    // 则我们将右边那个指针j左移一位，使得指向的数字减小一些
+    //
+    // 2层循环，使用两个数之和办法不再适用---这是因为输入值存在重复值，因此使用第一种map不再适用
+    vector<vector<int>> threeSum1(vector<int>& nums) {
+        vector<vector<int>> res;
+        sort(nums.begin(), nums.end());//vector排序
+        if (nums.empty() || nums.back() < 0 || nums.front() > 0) return {};//不满足条件的情况
+        for (int k = 0; k < nums.size(); ++k) {//固定值
+            if (nums[k] > 0) break;//不存在
+            if (k > 0 && nums[k] == nums[k - 1]) continue;//剪枝操作
+            int target = 0 - nums[k];//目标值
+            int i = k + 1, j = nums.size() - 1;//开始遍历
+            while (i < j) {
+                if (nums[i] + nums[j] == target) {
+                    res.push_back({nums[k], nums[i], nums[j]});
+                    while (i < j && nums[i] == nums[i + 1]) ++i;//跳过重复的数字
+                    while (i < j && nums[j] == nums[j - 1]) --j;
+                    ++i; --j;
+                } else if (nums[i] + nums[j] < target) ++i;
+                else --j;
+            }
+        }
+        return res;
+
+    }
 }
