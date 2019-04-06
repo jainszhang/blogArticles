@@ -307,4 +307,95 @@ namespace name_array{
         return res;
 
     }
+
+///7.给定一个包括 n 个整数的数组 nums 和 一个目标值 target。找出 nums 中的三个整数，使得它们的和与 target 最接近。返回这三个数的和。假定每组输入只存在唯一答案。
+///例如，给定数组 nums = [-1，2，1，-4], 和 target = 1.
+///与 target 最接近的三个数的和为 2. (-1 + 2 + 1 = 2).
+//分析：三个数的和与目标值之差最小，输入只存在唯一答案因此不存在重复情况
+    //方法1：暴力求解--3个循环
+    int threeSumClosest(vector<int>& nums, int target) {
+        if(nums.size()<3)
+            return -1;
+        int min_value=99999;
+        int res=0;
+        for (int i = 0; i < nums.size(); ++i) {
+            for (int j = i+1; j < nums.size(); ++j) {
+                for (int k = j+1; k < nums.size(); ++k) {
+                    int tmp = abs(target - (nums[i]+nums[j]+nums[k]));
+                    if(tmp<min_value)
+                    {
+                        min_value = tmp;
+                        res = nums[i]+nums[j]+nums[k];
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    //方法2:排序数组，固定一个目标值，使用前后指针相加
+    int threeSumClosest1(vector<int>& nums, int target) {
+        if(nums.size()<=2)
+            return -1;
+        sort(nums.begin(),nums.end());//排序
+        int closevalue = nums[0]+nums[1]+nums[2];//初始值
+        int pre,last;
+        for (int i = 0; i < nums.size(); ++i) {//固定一个值
+            pre = i+1,last = unsigned (nums.size() - 1);//前后指针
+            while (pre<last)
+            {
+                int sum = nums[pre] + nums[last] + nums[i];//3个值相加
+                if(abs(sum-target) < abs(closevalue-target))
+                {
+                    closevalue = sum;
+                }
+                if(sum >target) last --;//搜索的3个值大于目标值，需要向左移动
+                else if(sum <target) pre++;//搜索的3个值小于目标值，需要向右移动
+                else return target;
+            }
+        }
+        return closevalue;
+    }
+
+///8.给定一个包含 n 个整数的数组 nums 和一个目标值 target，判断 nums 中是否存在四个元素 a，b，c 和 d ，使得 a + b + c + d 的值与 target 相等？
+/// 找出所有满足条件且不重复的四元组。注意：答案中不可以包含重复的四元组。
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> res;
+        set<int>myset;
+        if(nums.size()<4)
+            return res;
+        //固定两个值，使用前后指针
+        sort(nums.begin(),nums.end());//排序
+        int pre,last;
+        for (int i = 0; i < nums.size(); ++i) {
+            for (int j = i+1; j < nums.size(); ++j) {
+                pre = j+1;
+                last = unsigned (nums.size()-1);
+                while (pre<last)
+                {
+                    int sum = nums[i] +nums[j]+nums[pre]+nums[last];
+                    if(sum == target)
+                    {
+                        vector<int> key{nums[i],nums[j],nums[pre],nums[last]};
+                        auto it = find(res.begin(),res.end(),key);//去掉重复值，这是因为j取值可能会有重复的
+                        if(it==res.end())//没有找到
+                            res.push_back(key);
+                        while (pre<last && nums[pre] == nums[pre+1]) ++pre;//去掉排序后紧挨着的相同的值
+                        while (pre<last && nums[last] == nums[last-1]) --last;
+                        pre++;last--;
+
+                    }
+                    else if(sum < target)
+                    {
+                        pre++;
+                    }
+                    else if(sum >target) last--;
+                }
+            }
+        }
+
+        return res;
+
+    }
+
+
 }
