@@ -397,5 +397,47 @@ namespace name_array{
 
     }
 
-
+///9.给定一个排序数组，你需要在原地删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。
+///不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
+    //方法1：遇到相等的直接删除，但是回移动元素，速度降低
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.size()==0)
+            return 0;
+        auto pre = nums.begin();
+        for (auto it = nums.begin()+1;it!=nums.end();it++) {
+            if(*pre == *it)
+            {
+                nums.erase(it);
+                it--;//抵消it++操作
+            } else
+            {
+                pre = it;
+            }
+        }
+        return nums.size();
+    }
+    //方法2：使用元素覆盖方式，不删除元素，不会造成元素移动，因此速度快
+    int removeDuplicates1(vector<int>& nums) {
+        if(nums.size()==0)
+            return 0;
+        int len=1;
+        auto pre = nums.begin();
+        auto cur = nums.begin()+1;
+        while(cur != nums.end())
+        {
+            if(*pre == *cur)
+            {
+                *pre = *cur;
+                cur++;
+            }
+            else if(*pre != *cur)
+            {
+                len++;
+                pre++;
+                *pre = *cur;
+            }
+        }
+        nums.erase(pre+1,nums.end());
+        return len;
+    }
 }
