@@ -440,4 +440,88 @@ namespace name_array{
         nums.erase(pre+1,nums.end());
         return len;
     }
+    ///10。给定一个数组 nums 和一个值 val，你需要原地移除所有数值等于 val 的元素，返回移除后数组的新长度。
+///不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
+///元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
+    //方法1：遍历，使用erase删除对应的元素即可，但是回造成元素在移动，耗费时间
+    //方法2：遍历，使用一个新的指针维护新数组即可
+    int removeElement(vector<int>& nums, int val) {
+        if(nums.size()==0)
+            return 0;
+        auto cur = nums.begin();//cur遍历当前的数组
+        auto pre = nums.begin();//pre维护新的数组
+        while (cur!=nums.end())
+        {
+            if(val != *cur)//遇到和目标值相等的值，继续移动直到和目标值不等
+            {
+                *pre = *cur;
+                pre++;
+            }
+            cur++;
+        }
+        nums.erase(pre,nums.end());
+        return int (nums.size());
+    }
+    int removeElement1(vector<int>& nums,int val){
+        int idx = 0;
+
+        for (int i = 0; i < nums.size(); i++)
+        {
+            if (nums[i] != val)
+            {
+                nums[idx] = nums[i];
+                idx++;
+            }
+        }
+
+        nums.resize(idx);
+        return idx;
+
+    }
+
+///11.实现获取下一个排列的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列。
+///如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
+///必须原地修改，只允许使用额外常数空间。
+///以下是一些例子，输入位于左侧列，其相应输出位于右侧列。
+//1,2,3 → 1,3,2
+//3,2,1 → 1,2,3
+//1,1,5 → 1,5,1
+    //分析：从后向前找，如果找到2个相邻的值是pre<last，那么就调换，然后在last到end之间寻找一个最接近且大于pre的值，再对last-end排序即可
+    // 如果找到头还没有找到这种情况，就对数组排序
+    int cmp1(int a,int b)
+    {return b>a;}
+    void nextPermutation(vector<int>& nums) {
+        if(nums.size()==0)
+            return ;
+        unsigned long pre = nums.size()-2,last = nums.size()-1;
+        for (int i = (int)pre; i >=0 ; --i) {
+            if(nums[pre] < nums[last])
+            {
+                //寻找last-end之间最接近pre的数，且大于pre
+                int idx_tmp=nums.size()-1;
+                while (idx_tmp >= last)
+                {
+                    if(nums[pre]<nums[idx_tmp])
+                    {
+                        int tmp = nums[pre];
+                        nums[pre] = nums[idx_tmp];
+                        nums[idx_tmp] = tmp;
+                        break;
+                    }
+                    idx_tmp --;
+                }
+                sort(nums.begin()+last,nums.end(),cmp1);
+                return;
+            }
+            pre--;last--;
+        }
+        vector<int> newvector;
+        if(++pre==0)
+        {
+            for (auto rit = nums.rbegin(); rit!=nums.rend(); ++rit) {
+                newvector.push_back(*rit);
+            }
+        }
+        nums = newvector;
+    }
 }
