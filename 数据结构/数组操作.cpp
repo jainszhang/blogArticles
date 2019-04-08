@@ -524,4 +524,125 @@ namespace name_array{
         }
         nums = newvector;
     }
+    ///13.假设按照升序排序的数组在预先未知的某个点上进行了旋转。
+///( 例如，数组 [0,1,2,4,5,6,7] 可能变为 [4,5,6,7,0,1,2] )。
+///搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。
+///你可以假设数组中不存在重复的元素。
+///你的算法时间复杂度必须是 O(log n) 级别。
+    //分析：在二分查找的基础上做，二分后两端一端有序，一端可能有序可能无序，有序则继续二分，无序也继续二分
+    //方法1：非递归方式
+    int search1(vector<int>& nums, int target){
+        if(nums.size()==0)
+            return -1;
+        int left =0,right = nums.size()-1,mid=0;
+        while (left<right)
+        {
+            mid = (left + right )/2;
+            if(target == nums[left])
+                return left;
+            if(target == nums[right])
+                return right;
+            if(target == nums[mid])
+                return mid;
+            if(nums[left] < nums[mid])//左边有序，右边无序
+            {
+                if(target > nums[left] && target<nums[mid])//目标值在左边有序序列,二分查找
+                {
+                    right = mid - 1;
+                }
+                else//目标值不在左边有序序列---意味着目标值在右边序列
+                {
+                    left = mid + 1;
+                }
+            }
+            else if(nums[mid] < nums[right])//右边有序的情况
+            {
+                if(target > nums[mid] && target < nums[right])//目标值在右边的有序序列中，二分查找
+                {
+                    left = mid+1;
+                }
+                else//目标值不在右边有序序列中---意味着在左边序列中
+                {
+                    right = mid -1;
+                }
+            }
+        }
+        if(nums[left] == target)
+            return left;
+        return -1;
+
+    }
+
+
+///14.给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+///你的算法时间复杂度必须是 O(log n) 级别。
+///如果数组中不存在目标值，返回 [-1, -1]。
+    //关键词：升序，log n时间，返回目标值起始和结束位置idx。隐含信息：相同的值肯定紧挨着
+    //分析：依旧是二分查找，目标值都在左边区间，目标值都在右边区间，目标值被一分为二
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> res;
+        if(nums.size()==0)
+            return res;
+        if(nums.size()==2 && target==nums[0] && target==nums[1])
+        {
+            res.push_back(0);
+            res.push_back(1);
+            return res;
+        }
+        if(nums.size()==2 && target==nums[0] && target!=nums[1])
+        {
+            res.push_back(0);
+            res.push_back(0);
+            return res;
+        }
+        if(nums.size()==2 && target!=nums[0] && target==nums[1])
+        {
+            res.push_back(1);
+            res.push_back(1);
+            return res;
+        }
+        int left=0,right = nums.size()-1,mid =0;
+        while(left<right)
+        {
+            mid = (left + right) /2;
+
+            if(target == nums[mid] && target > nums[mid-1])//目标值都在右边
+            {
+                int tmp_idx=mid;
+                while (target == nums[tmp_idx]) tmp_idx++;//找到最右边的target值
+                res.push_back(mid);
+                res.push_back(--tmp_idx);
+                return res;
+            }
+            else if(target == nums[mid] && target < nums[mid+1])//目标值都在左边
+            {
+                int tmp_idx=mid;
+                while (target == nums[tmp_idx])
+                    tmp_idx--;//找到最右边的target值
+                res.push_back(++tmp_idx);
+                res.push_back(mid);
+
+                return res;
+            }
+            else if(target == nums[mid] && target == nums[mid-1] && target == nums[mid+1])//目标值分布在两边
+            {
+                //以mid为中点，向两边查找
+                int tmp_idx_l=mid,tmp_idx_r =mid;
+                while (target == nums[tmp_idx_l]) tmp_idx_l--;//向左边找边界
+                while (target == nums[tmp_idx_r]) tmp_idx_r++;//向右边找边界
+                res.push_back(++tmp_idx_l);
+                res.push_back(--tmp_idx_r);
+                return res;
+            }
+
+            //如果没有找到任何的target值，继续二分
+            if(target<nums[mid]) right = mid-1;
+            else if(target > nums[mid]) left = mid +1;
+        }
+
+        res.push_back(-1);
+        res.push_back(-1);
+        return res;
+    }
+
 }
