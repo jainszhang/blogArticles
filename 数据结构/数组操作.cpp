@@ -645,4 +645,77 @@ namespace name_array{
         return res;
     }
 
+    ///15.给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+//candidates 中的数字可以无限制重复被选取。
+//说明：
+//所有数字（包括 target）都是正整数。
+//解集不能包含重复的组合。
+
+///解题思路：
+///1、这道题给定一个vector，里面装着彼此不重复的元素，元素是正整数，还给了一个target，也是正整数。
+//要求找出各种有可能的组合，使得vector中的元素的和等于target。
+//每个组合存储在一个一维的vector中，最终把这些一维的vector存在二维的vector中，返回二维vector。
+//各个组合不能重复。
+//2、我们先来看一个例子，vector是[2,3,6,7]，target是7，我们人类怎么解决这个问题呢？
+//我们当然是从后面看起，最大的7，看能不能满足target，结果是可以的，那么我们再看前一个数6。
+//6小于等于7，我们还要一个1，往本身或者前面看有没有小于等于1的，结果没有，那么我们就没有办法搭配6了，我们再看前一个数3。
+//3小于等于7，我们还要4，本身还可以再减去3，那么还要一个1，再往本身或者前面看，没有1。
+//那我们也许可以不要第二次减去3，我们减去前一个数2，然后还要一个2，刚好本身可以满足。
+//然后再看前一个数2，本身还可以再减去2，然后本身还可以再减去2，然后还要一个1，但没有办法了。
+//所以最终我们得到的组合是[[7],[3,2,2]]。
+//做的题目比较多的同学，可能已经嗅到了一股递归的味道。
+//这道题就是要不断试探，试探可以满足target的，插入到二维vector中，试探到不可以满足的，回退一步，再试其他可能。
+    ///从后向前走
+    vector<vector<int>>res;
+    vector<int>res1;//存储每次可能的组合结果
+    void digui(vector<int>& candidates,int index,int target,vector<int>&res1)
+    {
+        if(target == 0)//组合数找到了，加入res
+        {
+            res.push_back(res1);
+            return;
+        }
+        while(index>=0)//找下标直到第一个数为止
+        {
+            if(candidates[index]<=target)//目标值还未到负数，继续寻找
+            {
+                res1.push_back(candidates[index]);//找到组合对第一个值
+                digui(candidates,index,target-candidates[index],res1);//继续寻找下一个值
+                res1.pop_back();//寻找结束后退出一个值，再寻找下一个
+            }
+            index--;//index的值找完了，找前一个index对应值
+        }
+        if(index<=0)
+            return;
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        if(int(candidates.size())==0) return res;
+        digui(candidates,candidates.size()-1,target,res1);
+        return res;
+
+    }
+    ///从前向后走
+    void backtrad(vector<int>candidates,int start,int target,vector<int>item,vector<vector<int>> &res)
+    {
+        if(target<0)
+            return;
+        if(target == 0)
+        {
+            res.push_back(item);
+            return;
+        }
+        for(int i = start;i<candidates.size();i++)
+        {
+            item.push_back(candidates[i]);
+            backtrad(candidates,i,target - candidates[i],item,res);
+            item.pop_back();
+        }
+
+    }
+    vector<vector<int>> combinationSum1(vector<int>& candidates, int target) {
+        vector<vector<int>> res;
+        vector<int>item;
+        backtrad(candidates,0,target,item,res);
+        return res;
+    }
 }
