@@ -101,13 +101,13 @@ namespace name_sort {
                 int j=i;
                 int cur = arr[j];
                 
-                if(arr[j] < arr[j-gap])
-                {
-                    arr[j] = arr[j-gap];
-                    arr[j-gap] = cur;
+                while (j - gap >= 0 && cur < arr[j - gap]) {
+                    arr[j] = arr[j - gap];
+                    j = j - gap;
                 }
-                
+                arr[j] = cur;
             }
+                
         }
     }
     
@@ -241,14 +241,68 @@ namespace name_sort {
             }
         }
     }
+    /*基数排序：具体做法是：将所有待比较数值统一为同样的数位长度，数位较短的数前面补零。然后，从最低位开始，依次进行一次排序。这样从最低位排序一直到最高位排序完成以后, 数列就变成一个有序序列。
+     1.时间复杂度都为O（n*k）
+     2.空间复杂度为O（n+k）
+     3.稳定
+     */
+    void count_sort(vector<int>&arr,int exp)
+    {
+        vector<int>bucket(10,0);
+        vector<int>tmp(arr.size());
+        for(int i=0;i<arr.size();i++)//数据出现次数存储在buckets中
+        {
+            bucket[(arr[i]/exp)%10]++;
+        }
+        //关键一步：需要统计tmp位数
+        for(int i=1;i<10;i++)
+        {
+            bucket[i]+=bucket[i-1];///目的是为了确定某个数的下标
+        }
+        //分组排序
+        for(int i=int(arr.size()-1);i>=0;i--)
+        {
+            int k = (arr[i] / exp)%10;
+            tmp[bucket[k]-1] = arr[i];
+            bucket[k]--;
+        }
+        arr.swap(tmp);
+        
+    }
+    ///这种方式更容易理解
+    void count_sort1(vector<int>&arr,int exp)
+    {
+        vector<vector<int> >tmp(10);//存储10个二维数组
+        for(int i=0;i<arr.size();i++)//数据出现次数存储在buckets中
+        {
+            int k=(arr[i]/exp)%10;
+            tmp[k].push_back(arr[i]);
+            
+        }
+        int c=0;
+        for (int i=0; i<tmp.size(); i++) {
+            for (int j=0; j<tmp[i].size(); j++) {
+                arr[c++] = tmp[i][j];
+            }
+        }
+    }
+    void redix_Sort(vector<int>&arr)
+    {
+        int exp;
+        int max = *max_element(arr.begin(), arr.end());
+        for(exp=1;max/exp>0;exp*=10)//需要排序多少次，相当于多少位数据
+        {
+            count_sort1(arr, exp);
+        }
+    }
     
 }
 int main(int argc, const char * argv[]) {
     // insert code here...
     std::cout << "Hello, World!\n";
-    vector<int> arr{89,8,7,6,5,3,4,5,5,4,3,11,22,29};//
+    vector<int> arr{53, 3, 542, 748, 14, 214, 154, 63, 616};//
     
-    name_sort::bucket_Sort(arr);
+    name_sort::redix_Sort(arr);
     for(auto &elem:arr)
         cout<<elem<<" ";
     cout<<endl;
