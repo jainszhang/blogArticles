@@ -1,17 +1,13 @@
-常用方法：
-1.原地反转，使用三个指针
-2.快慢指针寻找是否存在环
-3.删除时考虑值的覆盖，或者考虑节点的指向
+//常用方法：
+//1.原地反转，使用三个指针
+//2.快慢指针寻找是否存在环
+//3.删除时考虑值的覆盖，或者考虑节点的指向
+//
+//
+//链表结构体
 
-
-链表结构体
-struct ListNode {
-    int val;
-    struct ListNode *next;
-    ListNode(int x=0) :val(x), next(nullptr) {}
-};
-
-1.逆序构建单链表：输入数据：1 2 3 4 5 6，构造单链表：6->5->4->3->2->1。
+#include "listNode.h"
+//1.逆序构建单链表：输入数据：1 2 3 4 5 6，构造单链表：6->5->4->3->2->1。
     void  desc_construct(ListNode * &head)//传入头节点的引用
     {
         //头插法创建链表
@@ -26,11 +22,11 @@ struct ListNode {
         }
         head = pre;//头节点指向第一个节点
     }
-    调用处：
-    ListNode *h=nullptr;
-    name_list::desc_construct(h);
+//    调用处：
+//    ListNode *h=nullptr;
+//    name_list::desc_construct(h);
 
-2.创建和打印链表
+//2.创建和打印链表
     //创建带头节点的链表
     void createHeadList(ListNode *phead,int &n)
     {
@@ -101,9 +97,9 @@ struct ListNode {
         cout<<endl;
     }
 
-3.链表的反转
-//例如：假设现有链表：6->5->4->3->2->1，进行反转操作后，链表变成：1->2->3->4->5->6。
-方法1:利用栈的特性反转链表
+//3.链表的反转
+////例如：假设现有链表：6->5->4->3->2->1，进行反转操作后，链表变成：1->2->3->4->5->6。
+//方法1:利用栈的特性反转链表
     ListNode* ReverseList(ListNode* pHead) {
         if(!pHead)
             return nullptr;
@@ -127,7 +123,7 @@ struct ListNode {
         q->next = nullptr;
         return h;
     }
-方法2:原地反转，使用3个指针
+//方法2:原地反转，使用3个指针
     ListNode* ReverseList2(ListNode* pHead) {
         if(pHead==nullptr || !pHead->next->next)//链表为空或只有一个节点
             return nullptr;
@@ -144,8 +140,8 @@ struct ListNode {
         return pre;
     }
 
-4.返回链表倒数第k个节点
-方法1:遍历访问链表，加入到数组中，直接访问索引节点
+//4.返回链表倒数第k个节点
+//方法1:遍历访问链表，加入到数组中，直接访问索引节点
 ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {
         vector<ListNode*> vnode;
         if (!pListHead)
@@ -158,7 +154,7 @@ ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {
         }
         return vnode[vnode.size() - k];
     }
-方法2:利用两个指针距离为k。假设 k 是小于等于链表长度，那么我们可以设置两个指针 p 和 q，这两个指针在链表里的距离就是 k，那么后面那个指针走到链表末尾的 nullptr 时，另一个指针肯定指向链表倒数第 k 个值。
+//方法2:利用两个指针距离为k。假设 k 是小于等于链表长度，那么我们可以设置两个指针 p 和 q，这两个指针在链表里的距离就是 k，那么后面那个指针走到链表末尾的 nullptr 时，另一个指针肯定指向链表倒数第 k 个值。
 ListNode* FindKthToTail2(ListNode* pListHead, unsigned int k)
     {
         if(!pListHead)
@@ -177,7 +173,7 @@ ListNode* FindKthToTail2(ListNode* pListHead, unsigned int k)
     }
 
 
-5.合并两个有序链表
+//5.合并两个有序链表
  //合并两个顺序链表
     ListNode* Merge(ListNode* pHead1, ListNode* pHead2)
     {
@@ -231,7 +227,7 @@ ListNode* FindKthToTail2(ListNode* pListHead, unsigned int k)
         return head;
     }
 
-6. 判断链表是否有环
+//6. 判断链表是否有环
     bool is_Loop(ListNode * head)
     {
         //设置两个指针，一个pre，一个last，pre一次走1步，last一次走2步，如果两者某一时刻相等，那么就存在环。
@@ -252,7 +248,7 @@ ListNode* FindKthToTail2(ListNode* pListHead, unsigned int k)
         return false;
     }
 
-7.删除链表中的当前节点
+//7.删除链表中的当前节点
 //删除链表当前节点，要求时间O（1）。
 //思路：1->2->3->4->5->6，如果我们要删除 4，可以把 4 和 5 的数据交换下，然后删除 5，再把 4 和 6 连接起来，如此其时间复杂度为 。
     void del(ListNode *head,ListNode * position)
@@ -272,7 +268,7 @@ ListNode* FindKthToTail2(ListNode* pListHead, unsigned int k)
         }
     }
 
-8.找出单链表中间节点
+//8.找出单链表中间节点
 //找出单链表的中间节点。慢指针走的长度等于快慢指针相距的程度。所以利用这个性质，当快指针走到链表尾时，慢指针正好在中间结点。
     ListNode *find_middle(ListNode* head)
     {
@@ -287,10 +283,10 @@ ListNode* FindKthToTail2(ListNode* pListHead, unsigned int k)
 
     }
 
-9.链表升序排序
+//9.链表升序排序
 
 
-10.判断链表是否有环？返回相遇环的节点，并且找到环的入口
+//10.判断链表是否有环？返回相遇环的节点，并且找到环的入口
 //若存在环且找到了相遇点 C，此时令一个指针 start_node 从链表第一个结点处开始往后遍历，再令另一个指针 meet_node 从 C 处往后遍历，它们的相遇结点就是环的入口点。
 ListNode * is_loop(ListNode * header)
 {
@@ -330,6 +326,6 @@ ListNode * find_meet_node(ListNode * header)
 }
 
 
-11.判断两个链表是否相交？或者是求两个链表的交点这样的问题，万变不离其宗。只需要把链表尾接到其中一个链表头就转换为9/10的问题了（有环无环）
+//11.判断两个链表是否相交？或者是求两个链表的交点这样的问题，万变不离其宗。只需要把链表尾接到其中一个链表头就转换为9/10的问题了（有环无环）
 
 
