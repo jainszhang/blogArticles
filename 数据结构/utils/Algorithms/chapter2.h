@@ -12,6 +12,7 @@
 #include<iostream>
 using namespace std;
 #include<vector>
+#include<map>
 
 template <typename T>
 void insert_Sort(vector<T>&arr)
@@ -140,10 +141,10 @@ void practice_3_4cur(vector<T>&arr,int n)//把数组a的第n个数插入前n-1�
     return;
 }
 ///不是很懂哦
+//递归方式实现插入排序：排序A[1..n-1]，把A[n]插入到已排好序的A[1..n-1]中
 template<typename T>
 void practice_3_4(vector<T>&arr,int n)
 {
-    //递归方式实现插入排序：排序A[1..n-1]，把A[n]插入到已排好序的A[1..n-1]中
     if(n>0)
     {
         practice_3_4(arr, n-1);//递归
@@ -153,4 +154,86 @@ void practice_3_4(vector<T>&arr,int n)
         return;
 }
 
+///二分查找,返回idx
+template <typename T>
+int practice_3_5(vector<T>&arr,int l,int r,T value)
+{
+    //递归实现
+    int mid = int (l+r)/2;
+//    分治
+    if(arr[mid]==value)
+        return mid;
+    if(l>=r)//l可能会大于r，因为再不断变化
+        return -1;
+    else if(arr[mid]>value)
+    {
+        r=mid-1;
+        return practice_3_5(arr, l, r, value);
+    }
+    else if(arr[mid]<value)
+    {
+        l = mid+1;
+        return practice_3_5(arr, l, r, value);
+    }
+    return -1;
+//
+////    非递归实现
+//    int mid=0;
+//    while (l<=r) {
+//        mid = int(l+r)/2;
+//        if(value>arr[mid])
+//        {
+//            l = mid+1;
+//        }
+//        else if(value == arr[mid])
+//        {
+//            return mid;
+//        }
+//        else if(value<arr[mid])
+//        {
+//            r=mid-1;
+//        }
+//
+//    }
+//    return -1;
+}
+
+//给定集合S和x，确定是否存在两个数y1和y2，使得y1+y2=x，要求O（nlogn）
+template <typename T>
+vector<int> practice_3_7(vector<T>&arr,T x)
+{//排序后，遍历arr，1--n-1,在剩下的里面用二分查找目标值
+    vector<T> res;
+    sort(arr.begin(), arr.end());
+    for(int i=0;i<arr.size();i++)
+    {
+        
+        int idx = practice_3_5(arr,i+1,int(arr.size()-1),x-arr[i]);
+        if( idx>0)
+        {
+            res.push_back(i);
+            res.push_back(idx);
+        }
+    }
+    return res;
+}
+template <typename T>
+vector<int> practice_3_77(vector<T>&arr,T x)
+{//借用map，映射，只需要O（n）大小
+    map<T, int>mymap;
+    vector<T> res;
+    sort(arr.begin(), arr.end());
+    for(int i=0;i<arr.size();i++)
+    {
+        T y2 = x-arr[i];
+        mymap.insert(pair<T, int>(y2,i));
+    }
+    for (int i=0; i<arr.size(); i++) {
+        if(mymap.count(arr[i]))
+        {
+            res.push_back(i);
+            res.push_back(mymap[arr[i]]);
+        }
+    }
+    return res;
+}
 #endif /* chapter2_h */

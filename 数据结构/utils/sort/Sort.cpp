@@ -21,11 +21,11 @@ void bubbleSort(vector<int>&arr)
     int len = int(arr.size());
     int tmp=0;
     for (int i=0; i<len; ++i) {
-        for (int j = i; j<len ; ++j) {
-            if(arr[i]>arr[j])
+        for (int j = 0; j<len-1-i ; ++j) {
+            if(arr[j]>arr[j+1])
             {
-                tmp = arr[i];
-                arr[i] = arr[j];
+                tmp = arr[j+1];
+                arr[j+1] = arr[j];
                 arr[j] = tmp;
             }
         }

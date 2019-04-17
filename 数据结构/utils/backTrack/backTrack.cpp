@@ -170,6 +170,69 @@ void queen()      //N皇后程序
         ++i;              //继续探测下一行的皇后位置
     }
 }
+#include <iostream>
+using namespace std;
+void queen1()
+{
+    int n = 0;
+    int i = 0, j = 0;//i表示行，j表示每行的列
+    //什么时候结速搜索
+    while(i<8)
+    {
+        if (i>8)
+        {
+            //此处需要给出解空间向量
+            return;
+        }
+        else
+        {///此处表示继续向下搜索
+            
+            //这一段循环要么找到第i行皇后位置，要么没找到第i行皇后位置，
+            //找到的话a[i]=j,否则a[i]=INITIAL
+            while(j<8)
+            {
+                if(valid(i,j))
+                {
+                    a[i] = j;//（i，j）位置放一个皇后
+                    j=0;//搜索下一行时，从第0列开始
+                    break;
+                }
+                else//（i，j）与前面放的皇后位置冲突，就是和解向量冲突
+                {
+                    ++j;//判断下一列
+                }
+            }
+            
+            //未找到解向量需要回溯继续找
+            if(a[i]==INITIAL)
+            {
+                if(i==0)
+                    break;
+                else
+                {
+                    --i;//回溯到上一行
+                    j=a[i]+1;//把上一行皇后位置向后移动一列
+                    a[i] = INITIAL;//清除上一行皇后位置,重新寻找
+                    continue;
+                }
+            }
+            
+            //找到解向量需要满足的条件
+            if (i==7)//表示最后一行也找到了，意味着找到了一个解向量
+            {
+                cout<<"answer :"<<++n<<endl;//打印第n个结果
+                print();
+                //继续寻找下一个解向量
+                j = a[i]+1;//列位置继续加1，从下一个位置继续寻找
+                a[i] = INITIAL;//把刚刚找到的解注释掉
+                continue;
+            }
+            ++i;//找下一行
+            
+        }
+    }
+    
+}
 
 
 ///2. 0-1背包问题
@@ -242,66 +305,137 @@ int *Knapsack(vector<int>values,vector<int>weights,int n,int maxWeight)
         i++;
     }
 }
-#include <iostream>
-using namespace std;
-void queen1()
-{
-    int n = 0;
-    int i = 0, j = 0;//i表示行，j表示每行的列
-    //什么时候结速搜索
-    while(i<8)
-    {
-        if (i>8)
-        {
-            //此处需要给出解空间向量
-            return;
+
+///3.给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。给出数字到字母的映射如下（与电话按键相同）。
+///注意 1 不对应任何字母。输入："23"
+///输出：["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+//分析：回溯法，digits有几个数字，就有几层树。终止条件：最后一个数字访问完毕。每一个数字需要对应的字母
+
+vector<string> letterCombinations(string digits) {
+    vector<string> res;
+    if(digits.empty())
+        return res;
+    vector<string>dic{"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    int depth=int(digits.size());
+    int n=0;
+    int col=0;
+    string str="";
+    
+    
+    
+    
+    
+    
+    
+    while (n<depth) {
+        //到叶子结点
+        while (n<depth) {
+            str=str+'a';
+            str[col];
+//            break;
         }
-        else
-        {///此处表示继续向下搜索
-            
-            //这一段循环要么找到第i行皇后位置，要么没找到第i行皇后位置，
-            //找到的话a[i]=j,否则a[i]=INITIAL
-            while(j<8)
-            {
-                if(valid(i,j))
-                {
-                    a[i] = j;//（i，j）位置放一个皇后
-                    j=0;//搜索下一行时，从第0列开始
-                    break;
-                }
-                else//（i，j）与前面放的皇后位置冲突，就是和解向量冲突
-                {
-                    ++j;//判断下一列
-                }
+        if (n==depth-1) {
+            //push
+            string ss = "ddd";
+            for (int j=0; j<5; j++) {
+                res.push_back(" ");
             }
-            
-            //未找到解向量需要回溯继续找
-            if(a[i]==INITIAL)
-            {
-                if(i==0)
-                    break;
-                else
-                {
-                    --i;//回溯到上一行
-                    j=a[i]+1;//把上一行皇后位置向后移动一列
-                    a[i] = INITIAL;//清除上一行皇后位置,重新寻找
-                    continue;
-                }
-            }
-            
-            //找到解向量需要满足的条件
-            if (i==7)//表示最后一行也找到了，意味着找到了一个解向量
-            {
-                cout<<"answer :"<<++n<<endl;//打印第n个结果
-                print();
-                //继续寻找下一个解向量
-                j = a[i]+1;//列位置继续加1，从下一个位置继续寻找
-                a[i] = INITIAL;//把刚刚找到的解注释掉
-                continue;
-            }
-            ++i;//找下一行
-            
+            n--;
+            col=col+1;
         }
+//        n++;
     }
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    return res;
+////    int _level = int(digits.size());
+//    //结束条件是第一个数字对应字符串个数访问完毕
+//    int _idx = int(digits[0])-48;
+//    string str = mymap.at(_idx);//第一个数字对应的字符串
+//    auto _firstCnt = str.size();
+//    int _count=0;
+//    int _countLev=0;
+//    vector<char> tmp;
+//    int j=0;
+//    while (_count<_firstCnt) {//记录第一个节点上字符访问的个数，达到最大时结束
+//
+//        if(_countLev==digits.size()-1)//到达最后一层，把所有结果放入res
+//        {
+//            int ii = int (digits[_countLev])-48;
+//            auto ss = mymap.at(ii);//得到最后一层对应的字符串
+//            while(j < ss.size())
+//            {
+//                tmp.push_back(ss[j]);//得到字符值
+//                res.push_back(tmp);
+//                tmp.pop_back();
+//                j++;
+//            }
+//            _countLev--;
+//            j=0;
+//        }
+//        if(_countLev<digits.size()-1)
+//        {
+//            j++;
+//            while (_countLev<digits.size()-1) {
+//                _countLev++;
+//            }
+////            while (_countLev < digits.size()-1) {
+////                int ii = int (digits[_countLev])-48;
+////                auto ss = mymap.at(ii);
+////
+////                tmp.push_back(ss[j]);
+////                _countLev++;
+////            }
+//        }
+//        if(_countLev == 0 && str[_count]!='\0')
+//        {
+//            _count++;
+//        }
+//
+//    }
+//
+//
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//
+//
+//    vector<string> res;
+//    if (digits.empty())
+//        return res;
+//    string dict[] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+//    res.push_back("");
+//    for (int i = 0; i < digits.size(); ++i) {
+//        int n = int (res.size());
+//        string str = dict[digits[i] - '2'];
+//        for (int j = 0; j < n; ++j) {
+//            string tmp = res.front();
+//            res.erase(res.begin());
+//            for (int k = 0; k < str.size(); ++k) {
+//                res.push_back(tmp + str[k]);
+//            }
+//        }
+//    }
+//    return res;
+
 }
