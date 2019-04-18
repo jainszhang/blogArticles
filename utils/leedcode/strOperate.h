@@ -15,6 +15,64 @@
 #include <iostream>
 using namespace std;
 
+void Split(const std::string &strTarget, char ch, std::vector<std::string> &vctStr)
+{
+    if(strTarget.empty())
+        return;
+    int i=0;
+    string tmp="";
+    int cnt=0;
+    while(i<strTarget.size())  {
+        if(ch!=strTarget.at(i))
+        {
+            tmp.append(1, strTarget.at(i));
+            //            tmp.insert(tmp.end()-1,strTarget.at(i));//添加到tmp中
+        }
+        else
+        {
+            cnt++;
+            tmp=tmp+'\0';
+            //            tmp.append('\0',1);
+            //            cout<<tmp<<endl;
+            vctStr.push_back(tmp);
+            tmp.clear();
+        }
+        i++;
+    }
+    if(cnt==0)
+        vctStr.push_back(strTarget);
+    return;
+}
+//6.Z字型字符串匹配
+string convert(string s, int numRows) {
+    string res="";
+    if (numRows==1) {
+        return s;
+    }
+    vector<string> vres(numRows,"");
+    int i=0;
+    int cnt = numRows;
+    while (s[i]!='\0') {
+        //向下访问
+        cnt=0;
+        while (cnt<numRows && s[i]!='\0') {
+            vres[cnt]+=s[i];
+            cnt++;
+            i++;
+        }
+        //需要向上访问2个
+        cnt=0;
+        while (cnt<numRows-2 && s[i]!='\0') {
+            vres[numRows-2-cnt]+=s[i];
+            cnt++;
+            i++;
+        }
+    }
+    cout<<endl;
+    for(auto &e:vres)
+        res+=e;
+    return res;
+}
 
 ///8. 字符串转换整数 (atoi)
 int myAtoi(string str) {
@@ -87,7 +145,6 @@ int myAtoi(string str) {
     }
     return res;
 }
-
 
 
 

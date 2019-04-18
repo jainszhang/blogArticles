@@ -236,4 +236,11 @@ vector<int> practice_3_77(vector<T>&arr,T x)
     }
     return res;
 }
+
+//修改归并x排序，使得当子序列长度为k时，合并数组，此时有n/k个子序列
+template <typename T>
+vector<int> practice_2_1(vector<T>&arr,T x)
+{
+    
+}
 #endif /* chapter2_h */
