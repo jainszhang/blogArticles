@@ -237,10 +237,58 @@ vector<int> practice_3_77(vector<T>&arr,T x)
     return res;
 }
 
-//修改归并x排序，使得当子序列长度为k时，合并数组，此时有n/k个子序列
-template <typename T>
-vector<int> practice_2_1(vector<T>&arr,T x)
+
+vector<int> crossMaxSum(vector<int>&arr,int l,int r,int mid)
 {
+    //该情况是跨越两个子数组情况，必定包含mid
+    //找mid左边最大值和最大的下标i
+    int sum_left=INT_MIN,sum_right=INT_MIN;
+    int sum=0;
+    int left_idx=0,right_idx=0;
+    for(int i=mid;i>=l;i--)
+    {
+        sum=sum+arr[i];
+        if(sum>sum_left)
+        {
+            sum_left=sum;
+            left_idx=i;
+        }
+    }
+    sum=0;
+    for(int i=mid+1;i<=r;i++)
+    {
+        sum=sum+arr[i];
+        if(sum>sum_right)
+        {
+            sum_right=sum;
+            right_idx=i;
+        }
+    }
+    return vector<int>{left_idx,right_idx,sum_right+sum_left};
+}
+template <typename T>
+vector<int> findMaxSum1(vector<T>&arr,int l,int r)
+{
+    //分治方式,l表示左边边界，r表示右边边界
+    vector<int> res1,res2,res3;
+    if(l==r)//只有一个值，直接返回arr[l]
+    {
+        return vector<int>{l,r,arr[l]};
+    }
+    else//还可以继续分治
+    {
+        int mid=(l+r)/2;
+        res1 = findMaxSum1(arr, l, mid);//找左边数组最大值
+        res2 = findMaxSum1(arr, mid+1, r);//找右边子数组
+        res3 = crossMaxSum(arr, l, r, mid);//找跨越左右的数组
+        if(res1[2]>=res2[2] && res1[2]>=res3[2])
+            return res1;
+        else if(res2[2] >=res1[2] && res2[2]>=res3[2])
+            return res2;
+        else
+            return res3;
+    }
+    return res1;
     
 }
 #endif /* chapter2_h */
