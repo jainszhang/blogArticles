@@ -7,6 +7,8 @@
 //链表结构体
 
 #include "listNode.h"
+
+
 //1.逆序构建单链表：输入数据：1 2 3 4 5 6，构造单链表：6->5->4->3->2->1。
     void  desc_construct(ListNode * &head)//传入头节点的引用
     {
@@ -43,7 +45,6 @@
     ListNode* createNoHeadList()
     {
         ListNode * head=nullptr,*cur=nullptr;
-
         int v=0;
         while (1)
         {
@@ -329,3 +330,20 @@ ListNode * find_meet_node(ListNode * header)
 //11.判断两个链表是否相交？或者是求两个链表的交点这样的问题，万变不离其宗。只需要把链表尾接到其中一个链表头就转换为9/10的问题了（有环无环）
 
 
+//[2,4,3]
+//[5,6,4]
+ListNode* addTwoNumbers() {
+    ListNode * l1 = createNoHeadList();
+    ListNode * l2 = createNoHeadList();
+    stack<ListNode*> s1,s2;
+    ListNode *newhead=l1;
+    while(l1->next!=nullptr) s1.push(l1);
+    while(l2->next!=nullptr) s2.push(l2);
+    while(!s1.empty() || !s2.empty())
+    {
+        std::cout<<s1.top()->val<<s2.top()->val<<endl;
+        s1.pop();
+        s2.pop();
+    }
+    return newhead;
+}

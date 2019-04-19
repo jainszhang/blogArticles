@@ -18,4 +18,5 @@ struct ListNode {
     struct ListNode *next;
     ListNode(int x=0) :val(x), next(nullptr) {}
 };
+ListNode* addTwoNumbers() ;
 #endif /* listNode_h */

@@ -237,7 +237,7 @@ vector<int> practice_3_77(vector<T>&arr,T x)
     return res;
 }
 
-
+///////寻找最大和的连续子数组///////
 vector<int> crossMaxSum(vector<int>&arr,int l,int r,int mid)
 {
     //该情况是跨越两个子数组情况，必定包含mid
@@ -245,17 +245,20 @@ vector<int> crossMaxSum(vector<int>&arr,int l,int r,int mid)
     int sum_left=INT_MIN,sum_right=INT_MIN;
     int sum=0;
     int left_idx=0,right_idx=0;
-    for(int i=mid;i>=l;i--)
+    for(int i=mid;i>=l;i--)//查左边最大值和下标
     {
         sum=sum+arr[i];
         if(sum>sum_left)
         {
+            
+            
+            
             sum_left=sum;
             left_idx=i;
         }
     }
     sum=0;
-    for(int i=mid+1;i<=r;i++)
+    for(int i=mid+1;i<=r;i++)//查右边最大值，和下标
     {
         sum=sum+arr[i];
         if(sum>sum_right)
@@ -289,6 +292,6 @@ vector<int> findMaxSum1(vector<T>&arr,int l,int r)
             return res3;
     }
     return res1;
-    
 }
+
 #endif /* chapter2_h */
